@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Matrix Interface</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: #000;
+            color: white;
+            overflow: hidden;
+        }
+
+
+        /* =========================
+           VIDEO DE FONDO
+        ========================= */
+
+        #video-fondo {
+            position: fixed;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            z-index: 0;
+        }
+
+
+        /* =========================
+           CAPA OSCURA
+        ========================= */
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(0, 0, 0, 0.90) 0%,
+                    rgba(0, 0, 0, 0.65) 45%,
+                    rgba(0, 0, 0, 0.45) 100%
+                );
+
+            z-index: 1;
+        }
+
+
+        /* =========================
+           LAYOUT GENERAL
+        ========================= */
+
+        .layout {
+            position: relative;
+
+            width: 100%;
+            height: 100vh;
+
+            display: grid;
+
+            grid-template-columns: 250px 1fr;
+            grid-template-rows: 75px 1fr 50px;
+
+            z-index: 2;
+        }
+
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        nav {
+            grid-column: 1 / -1;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 40px;
+
+            background: rgba(0, 0, 0, 0.55);
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+
+            backdrop-filter: blur(12px);
+        }
+
+        .logo {
+            font-family: "Orbitron", sans-serif;
+
+            font-size: 24px;
+            font-weight: 800;
+
+            letter-spacing: 5px;
+
+            text-shadow:
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 25px rgba(255, 255, 255, 0.4);
+        }
+
+        nav ul {
+            display: flex;
+            gap: 35px;
+
+            list-style: none;
+        }
+
+        nav a {
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            letter-spacing: 2px;
+
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            text-shadow:
+                0 0 10px white,
+                0 0 20px white;
+
+            opacity: 0.7;
+        }
+
+
+        /* =========================
+           ASIDE
+        ========================= */
+
+        aside {
+            padding: 40px 25px;
+
+            background: rgba(0, 0, 0, 0.45);
+
+            border-right: 1px solid rgba(255, 255, 255, 0.12);
+
+            backdrop-filter: blur(14px);
+        }
+
+        aside h3 {
+            font-family: "Orbitron", sans-serif;
+
+            font-size: 13px;
+
+            letter-spacing: 3px;
+
+            margin-bottom: 30px;
+
+            opacity: 0.7;
+        }
+
+        aside ul {
+            list-style: none;
+        }
+
+        aside li {
+            margin-bottom: 20px;
+        }
+
+        aside a {
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            opacity: 0.65;
+
+            transition: 0.3s;
+        }
+
+        aside a:hover {
+            opacity: 1;
+
+            padding-left: 8px;
+
+            text-shadow:
+                0 0 10px white;
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        main {
+            display: flex;
+
+            align-items: center;
+
+            padding: 70px;
+
+            overflow: hidden;
+        }
+
+        .contenido {
+            max-width: 800px;
+        }
+
+        .etiqueta {
+            display: inline-block;
+
+            margin-bottom: 25px;
+
+            padding: 8px 15px;
+
+            border: 1px solid rgba(255, 255, 255, 0.35);
+
+            border-radius: 30px;
+
+            background: rgba(255, 255, 255, 0.08);
+
+            backdrop-filter: blur(10px);
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            letter-spacing: 3px;
+
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-family: "Orbitron", sans-serif;
+
+            font-size: clamp(50px, 7vw, 100px);
+
+            line-height: 0.95;
+
+            letter-spacing: -3px;
+
+            margin-bottom: 30px;
+
+            text-shadow:
+                0 0 15px rgba(255, 255, 255, 0.8),
+                0 0 40px rgba(255, 255, 255, 0.35);
+        }
+
+        .descripcion {
+            max-width: 650px;
+
+            font-size: 20px;
+
+            line-height: 1.7;
+
+            color: rgba(255, 255, 255, 0.9);
+
+            text-shadow:
+                0 2px 10px black,
+                0 0 20px black;
+        }
+
+
+        /* =========================
+           BOTONES
+        ========================= */
+
+        .botones {
+            display: flex;
+
+            gap: 15px;
+
+            margin-top: 40px;
+        }
+
+        .boton {
+            display: inline-block;
+
+            padding: 15px 28px;
+
+            color: white;
+
+            text-decoration: none;
+
+            border: 1px solid rgba(255, 255, 255, 0.5);
+
+            background: rgba(255, 255, 255, 0.08);
+
+            backdrop-filter: blur(10px);
+
+            font-weight: 600;
+
+            letter-spacing: 1px;
+
+            transition: 0.3s;
+        }
+
+        .boton:hover {
+            background: rgba(255, 255, 255, 0.9);
+
+            color: black;
+
+            box-shadow:
+                0 0 20px rgba(255, 255, 255, 0.7);
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            grid-column: 1 / -1;
+
+            display: flex;
+
+            align-items: center;
+
+            padding: 0 30px;
+
+            background: rgba(0, 0, 0, 0.55);
+
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+
+            backdrop-filter: blur(12px);
+
+            font-size: 11px;
+
+            letter-spacing: 2px;
+
+            opacity: 0.7;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 800px) {
+
+            .layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: 70px 1fr 45px;
+            }
+
+            aside {
+                display: none;
+            }
+
+            nav {
+                padding: 0 20px;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            main {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 50px;
+            }
+
+            .descripcion {
+                font-size: 17px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         VIDEO
+    ========================= -->
+
+    <video id="video-fondo" autoplay muted loop playsinline>
+
+        <source src="video.mp4" type="video/mp4">
+
+        Tu navegador no soporta video HTML5.
+
+    </video>
+
+
+    <!-- =========================
+         CAPA PARA OSCURECER VIDEO
+    ========================= -->
+
+    <div class="overlay"></div>
+
+
+    <!-- =========================
+         LAYOUT
+    ========================= -->
+
+    <div class="layout">
+
+
+        <!-- NAVBAR -->
+
+        <nav>
+
+            <div class="logo">
+                MATRIX
+            </div>
+
+            <ul>
+
+                <li>
+                    <a href="#">INICIO</a>
+                </li>
+
+                <li>
+                    <a href="#">SISTEMA</a>
+                </li>
+
+                <li>
+                    <a href="#">ARCHIVOS</a>
+                </li>
+
+                <li>
+                    <a href="#">CONTACTO</a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+
+        <!-- SIDEBAR -->
+
+        <aside>
+
+            <h3>
+                NAVEGACIÓN
+            </h3>
+
+            <ul>
+
+                <li>
+                    <a href="#">01 / PRINCIPAL</a>
+                </li>
+
+                <li>
+                    <a href="#">02 / DATOS</a>
+                </li>
+
+                <li>
+                    <a href="#">03 / SISTEMA</a>
+                </li>
+
+                <li>
+                    <a href="#">04 / TERMINAL</a>
+                </li>
+
+            </ul>
+
+        </aside>
+
+
+        <!-- CONTENIDO -->
+
+        <main>
+
+            <div class="contenido">
+
+                <span class="etiqueta">
+                    SYSTEM ONLINE
+                </span>
+
+                <h1>
+                    THE<br>
+                    MATRIX
+                </h1>
+
+                <p class="descripcion">
+                    Una interfaz diseñada para explorar los límites
+                    entre realidad, información y tecnología.
+                </p>
+
+                <div class="botones">
+
+                    <a href="#" class="boton">
+                        ACCEDER
+                    </a>
+
+                    <a href="#" class="boton">
+                        EXPLORAR
+                    </a>
+
+                </div>
+
+            </div>
+
+        </main>
+
+
+        <!-- FOOTER -->
+
+        <footer>
+
+            SYSTEM STATUS: ONLINE &nbsp; // &nbsp; CONNECTION ESTABLISHED
+
+        </footer>
+
+
+    </div>
+
+</body>
+</html>
